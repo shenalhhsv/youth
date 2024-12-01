@@ -7,6 +7,7 @@ package gui;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
+import model.MySQL2;
 
 /**
  *
@@ -241,9 +242,23 @@ public class Signin extends javax.swing.JFrame {
         } else if (password.isEmpty()) {
             JOptionPane.showConfirmDialog(this, "Please enter your password", "warning", JOptionPane.WARNING_MESSAGE);
         } else {
-            Home home = new Home();
-            home.setVisible(true);
-            this.dispose();
+
+            try {
+
+                ResultSet resultSet = MySQL2.executeSearch("SELECT *FROM `admin` WHERE `email` = '" + email + "' AND `password` = '" + password + "'");
+
+                if (resultSet.next()) {
+
+                    Home home = new Home();
+                    home.setVisible(true);
+                    this.dispose();
+
+                } else {
+                    JOptionPane.showConfirmDialog(this, "Invalid username OR password", "warning", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
